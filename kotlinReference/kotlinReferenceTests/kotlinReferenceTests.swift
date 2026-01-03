@@ -5,13 +5,17 @@
 //  Created by Matt Hunt on 1/2/26.
 //
 
+import Foundation
 import Testing
-@testable import kotlinReference
 
-struct kotlinReferenceTests {
+struct decoderTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func canDecodeJSONObject() async throws {
+        // Arrange
+        let JSONObject = "".data(using: .utf8)
+        // Then
+        let decoder = JSONDecoder()
+        decoder.decode(Note.self, from: JSONObject)
     }
 
 }
