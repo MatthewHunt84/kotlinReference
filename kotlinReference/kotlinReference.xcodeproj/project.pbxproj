@@ -40,11 +40,6 @@
 			path = kotlinReferenceTests;
 			sourceTree = "<group>";
 		};
-		F4285D6B2F089969006FC26A /* kotlinReferenceUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = kotlinReferenceUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +72,6 @@
 			children = (
 				F4285D532F089966006FC26A /* kotlinReference */,
 				F4285D612F089969006FC26A /* kotlinReferenceTests */,
-				F4285D6B2F089969006FC26A /* kotlinReferenceUITests */,
 				F4285D522F089966006FC26A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -152,9 +146,6 @@
 			);
 			dependencies = (
 				F4285D6A2F089969006FC26A /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				F4285D6B2F089969006FC26A /* kotlinReferenceUITests */,
 			);
 			name = kotlinReferenceUITests;
 			packageProductDependencies = (
