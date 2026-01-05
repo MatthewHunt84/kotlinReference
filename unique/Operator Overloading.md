@@ -231,6 +231,11 @@ println(p1 === p2)  // false (reference equality, different objects)
 
 > [!NOTE]
 > Implement `iterator()` to use your class in for loops and with iteration operators.
+> This used to exist in swift but was removed in Swift 3 for being a little confusing for newcomers and the ability to add bugs.
+
+> [!TIP] The position of the ++ matters!
+> let id = current++ // assign first, then iterate
+> let id = ++current // iterate first, then assign
 
 ```kotlin
 class IntRange(private val start: Int, private val end: Int) {

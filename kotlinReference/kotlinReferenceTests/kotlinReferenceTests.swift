@@ -10,12 +10,18 @@ import Testing
 
 struct decoderTests {
 
-    @Test func canDecodeJSONObject() async throws {
-        // Arrange
-        let JSONObject = "".data(using: .utf8)
-        // Then
-        let decoder = JSONDecoder()
-        decoder.decode(Note.self, from: JSONObject)
+    @Test func staticPropertiesNotPassedToAllClassInstances() throws {
+        class testObject {
+            static var shouldBeFive = 5
+        }
+        
+        let instance1 = testObject()
+        let instance2 = testObject()
+        
+        instance1.shouldBeFive = 6
+        #expect(instance2.shouldBeFive == 5)
+        
     }
+    
 
 }
