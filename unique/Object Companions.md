@@ -4,10 +4,10 @@
 > [!NOTE]
 > Kotlin doesn't have a `static` keyword. Instead, it uses object declarations and companion objects. Object declarations create singletons, while companion objects provide class-level members (like static members in other languages).
 
-### Object Declarations (Singletons)
+### Singletons 
 
 > [!NOTE]
-> An `object` declaration creates a singleton - a class with exactly one instance. It's lazily initialized on first access and thread-safe.
+> An `object` declaration creates a singleton in kotlin - a class with exactly one instance. It's lazily initialized on first access and thread-safe.
 
 ```kotlin
 // Object declaration - automatic singleton
@@ -28,34 +28,32 @@ println(DatabaseConfig.host)
 **Swift comparison:**
 
 ```swift
-// Swift singleton
+// Swift singleton needs a private initializer and shared property
 class DatabaseConfig {
     static let shared = DatabaseConfig()
     private init() {}
     
     let host = "localhost"
     let port = 5432
+	
+	func connect() {
+        println("Connecting to \(host):\(port)")
+    }
+
 }
 
 // Usage
+DatabaseConfig.connect()
 DatabaseConfig.shared.host
 ```
 
-```kotlin
-// Kotlin - much simpler
-object DatabaseConfig {
-    val host = "localhost"
-    val port = 5432
-}
-
-// Usage
-DatabaseConfig.host
-```
 
 ### Companion Objects
 
 > [!NOTE]
 > A companion object is an object declaration inside a class. Its members can be accessed using the class name, similar to static members. Each class can have only one companion object.
+> Just like a static propery on a swift class, these are available on the class directly but *not on instances of that class*
+
 
 ```kotlin
 class User(val name: String, val age: Int) {
@@ -72,6 +70,12 @@ class User(val name: String, val age: Int) {
 // Usage
 println(User.MIN_AGE)
 val user = User.create("Alice", 25)
+
+// Can't use on instance of a class
+val instance = User("Alice", 25)
+println(instance.MIN_AGE) // Won't compile - companion not available on instances
+
+
 ```
 
 **Swift comparison:**
@@ -89,6 +93,10 @@ class User {
 // Usage
 User.minAge
 User.create(name: "Alice", age: 25)
+
+// Also can't use on instance of a class
+val instance = User()
+print(instance.minAge) // Won't compile - static property not available on instances
 ```
 
 ### Named Companion Objects
@@ -108,7 +116,7 @@ val user2 = User.Factory.create("Bob")
 ### Constants in Companion Objects
 
 > [!IMPORTANT]
-> Use `const val` for compile-time constants. These must be primitive types or Strings and are directly inlined by the compiler.
+> Use `const val` for compile-time constants. These must be primitive types or Strings and are directly inlined (replaced with the actual assignment) by the compiler.
 
 ```kotlin
 class Config {
@@ -119,6 +127,16 @@ class Config {
         // Only primitive types and String allowed with const
         // const val user = User()  // Error!
     }
+}
+
+// Under the hood
+
+fun main() { 
+	// When accessed, a val is property is accessed at runtime
+	println(Config.timeout) // Actual property access at runtime 
+	
+	// However a const val isn't called - the value is assigned everywhere in code during compilation like one big find and replace
+	println(Config.API_KEY) // Inlined directly - no lookup. More akin to simply println("abc123")
 }
 ```
 
