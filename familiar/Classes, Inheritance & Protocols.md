@@ -28,6 +28,9 @@ class Person {
         self.age = age
     }
 }
+
+// When creating an instance we stick with colons (kotlin uses equals signs)
+let person = Person(name: "Alice", age "28")
 ```
 
 ```kotlin
@@ -40,7 +43,70 @@ class Person(val name: String, var age: Int) {
         // initialization code
     }
 }
+
+// When creating an instance kotlin uses equals signs
+let person = Person(name = "Alice", age = "28")
 ```
+
+In the examples above, both arguments are properties of that class - so they have a `val` or `var` in front of the argument label. You can also pass in an argument which is not a property! For example:
+```kotlin
+// Kotlin
+
+// While name is a property of this class, both age and multiplier are not - they're just passed in to calculate the readingAge
+class Person(val name: String, age: Int, multiplier: Int) {
+	var readingAge: Int = age * multiplier // Note that this isn't in the Person declaration above. It's okay to assign it inside the class body
+}
+
+val test = Person(name = "Alice", age = 25, multiplier = 2)
+println(test.readingAge) // prints 50
+
+```
+
+In swift we can create multiple init methods which take various properties like this:
+```swift
+// Swift
+class Person {
+    let name: String
+    let readingAge: Int
+    
+    init(name: String, age: Int, multiplier: Int) {
+        self.name = name
+        self.age = age * multiplier
+    }
+}
+```
+
+In kotlin we do the same thing with a **secondary constructor**
+```kotlin
+class Person(val name: String, val readingAge: Int) {
+    
+    constructor(name: String, age: Int, multiplier: Int) : this( // note the use of THIS here
+        name = student.name,
+        readingAge = age * multiplier
+    )
+}
+
+val person = Person(name = "Alice", age = 25, multiplier = 50)
+println("${person.name}, ${person.readingAge}")  // Alice, 50
+```
+
+> [!TIP] Although this is similar to swift, in practice when initializing from another class kotlin folk tend to prefer companion object factories like the one below
+> ```kotlin
+> // Kotlin
+> // Lets say we're initializing from a different class
+> data class Student(val name: String, val age: Double)
+> 
+> class Person(val name: String, val readingAge: Int) {
+>     companion object {
+>         fun fromStudent(student: Student): Person {
+>             return Person(
+>                 name = student.name,
+>                 readingAge = student.age.toInt() * 2
+>             )
+>         }
+>     }
+> }
+
 
 | Task | Swift | Kotlin | Note |
 |------|-------|--------|------|
