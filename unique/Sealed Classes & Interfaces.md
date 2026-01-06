@@ -4,7 +4,73 @@
 > [!NOTE]
 > Sealed classes represent restricted class hierarchies where all subclasses are known at compile time. Think of them as enums on steroids - they can have state, multiple instances, and different types. Perfect for representing states, results, and algebraic data types.
 
-### Basic Sealed Class
+### Think of Sealed Classes like Swift Enums
+1. You get an exhaustive list of subclasses / objects that can’t be extended which makes switching on results easy
+2. Each subclass can have it’s own properties
+3. If you want to get fancy, each subclass can multiple properties and even methods - and the parent sealed class can have its own methods as well
+
+```kotlin
+// Kotlin
+sealed class DeliveryStatus {
+    class Pending(val sender: String): DeliveryStatus()
+    class InTransit(val estimatedDeliveryDate: String): DeliveryStatus()
+    class Delivered(val recipient: String, val deliveryDate: String): DeliveryStatus()
+    class Canceled(val reason: String): DeliveryStatus()
+}
+
+fun printDeliveryStatus(status: DeliveryStatus) {
+    when (status) {
+        is DeliveryStatus.Pending -> {
+            println("The package is pending pickup from ${status.sender}.")
+        }
+        is DeliveryStatus.InTransit -> {
+            println("The package is in transit and expected to arrive by ${status.estimatedDeliveryDate}.")
+        }
+        is DeliveryStatus.Delivered -> {
+            println("The package was delivered to ${status.recipient} on ${status.deliveryDate}.")
+        }
+        is DeliveryStatus.Canceled -> {
+            println("The delivery was canceled due to: ${status.reason}.")
+        }
+    }
+}
+
+fun main() {
+    val status1: DeliveryStatus = DeliveryStatus.Pending("Alice")
+    val status2: DeliveryStatus = DeliveryStatus.InTransit("2024-11-20")
+    val status3: DeliveryStatus = DeliveryStatus.Delivered(deliveryDate = "2024-11-18", recipient = "Bob") // These are in the wrong order, but named params solves!
+    val status4: DeliveryStatus = DeliveryStatus.Canceled("Address not found")
+
+    printDeliveryStatus(status1)
+    // The package is pending pickup from Alice.
+    printDeliveryStatus(status2)
+    // The package is in transit and expected to arrive by 2024-11-20.
+    printDeliveryStatus(status3)
+    // The package was delivered to Bob on 2024-11-18.
+    printDeliveryStatus(status4)
+    // The delivery was canceled due to: Address not found.
+```
+
+Note that with Kotlin Enums you can have a common shared type, but not individual unique types.
+In the example below the Enum has a shared property ‘code’ of type Int, and its own function - but each case in the enum can’t have unique properties and methods like in the above example using a sealed class
+
+```kotlin
+// Kotlin
+enum class HttpError(val code: Int) {
+    Unauthorized(401),
+    NotFound(404);
+
+    fun describe(): String {
+        when(this) {
+            Unauthorized -> return "You are not authorized to access this resource"
+            NotFound -> return "Resource not found"
+        }
+    }
+}
+```
+
+### Common Sealed Class Use Case: 
+> [!CAUTION] Will be replaced by Rich Errors in Kotlin 2.4
 
 ```kotlin
 sealed class Result {
